@@ -4,7 +4,7 @@
 
 ## Objetivo da stack
 
-O `docker-compose.yml` foi criado com escopo preparado para os proximos passos do tutorial. O codigo atual ja usa Kafka para publicar e consumir `OrderCreatedEvent` e PostgreSQL para persistir esse evento. RabbitMQ permanece provisionado para os incrementos seguintes.
+O `docker-compose.yml` foi criado com escopo preparado para os proximos passos do tutorial. O codigo atual usa Kafka para publicar e consumir `OrderCreatedEvent`, enquanto a persistencia local roda em H2 in-memory dentro do proprio processo da aplicacao. RabbitMQ permanece provisionado para os incrementos seguintes.
 
 ## Servicos do compose
 
@@ -12,13 +12,11 @@ O `docker-compose.yml` foi criado com escopo preparado para os proximos passos d
 
 Container da aplicacao Camel empacotada a partir do jar sombreado.
 
-Ele depende apenas dos servicos realmente usados no fluxo atual: Kafka e PostgreSQL.
+Ele depende apenas do Kafka para o fluxo atual. O banco H2 e o console web sobem dentro do mesmo processo Java.
 
-### `postgres`
+### `h2`
 
-Banco usado pela persistencia do fluxo consumido e preparado para futuras evolucoes como pedido materializado e outbox.
-
-O schema eh aplicado pela propria aplicacao via Liquibase no startup, portanto nao existe script SQL manual separado no compose para criar as tabelas principais.
+Nao existe container separado para o banco. O app cria o `DataSource` H2 in-memory no bootstrap, aplica Liquibase automaticamente e expoe o console web para inspecao local.
 
 ### `zookeeper` e `kafka`
 
@@ -49,18 +47,20 @@ docker compose up --build
 
 - App HTTP: `http://localhost:8080`
 - Health: `http://localhost:8080/health`
+- H2 Console: `http://localhost:8082`
 - Kafdrop: `http://localhost:9000`
 - RabbitMQ Management: `http://localhost:15672`
 - Kafka broker externo: `localhost:9092`
-- PostgreSQL: `localhost:5432`
+
+No H2 Console, conecte usando JDBC `jdbc:h2:mem:ecommerce;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`, usuario `sa` e senha vazia.
 
 ## Variaveis de ambiente
 
-Copie os valores de `.env.example` para um `.env` local caso queira alterar portas, usuario ou senha.
+Copie os valores de `.env.example` para um `.env` local caso queira alterar as portas expostas.
 
 ## Importante
 
-Hoje o app ja usa Kafka e PostgreSQL efetivamente. RabbitMQ continua no compose como apoio ao roadmap, mas nao faz parte do caminho de runtime atual.
+Hoje o app ja usa Kafka e H2 efetivamente. RabbitMQ continua no compose como apoio ao roadmap, mas nao faz parte do caminho de runtime atual.
 
 [Anterior: Testes](04-testes.md)
 

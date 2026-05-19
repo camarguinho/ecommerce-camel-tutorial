@@ -49,7 +49,7 @@ Executa o fluxo de integracao de consumo:
 - consome o topico Kafka `order-created`
 - desserializa o payload para `OrderCreatedEvent`
 - extrai headers para persistencia
-- grava o registro em PostgreSQL
+- grava o registro em H2 in-memory via Camel SQL
 - redireciona para DLT em caso de falha apos retries
 
 ### `HealthHttpRoute` e `HealthRoute`
@@ -90,12 +90,12 @@ Kafka topic order-created
 consume-order-created-route
         |
         v
-PostgreSQL order_events
+H2 order_events
 ```
 
 ## Proximo ponto de extensao natural
 
-Agora que o `OrderCreatedEvent` ja eh publicado em Kafka, consumido e persistido em PostgreSQL, o proximo passo natural do tutorial eh introduzir um consumidor separado, comparar a mesma publicacao em RabbitMQ ou evoluir para Outbox Pattern.
+Agora que o `OrderCreatedEvent` ja eh publicado em Kafka, consumido e persistido em H2 in-memory, o proximo passo natural do tutorial eh introduzir um consumidor separado, comparar a mesma publicacao em RabbitMQ ou evoluir para uma persistencia relacional externa com Outbox Pattern.
 
 [Anterior: Setup e Visao Geral](00-setup.md)
 

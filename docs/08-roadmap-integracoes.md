@@ -4,7 +4,7 @@
 
 ## Estado atual
 
-O projeto ja publica `OrderCreatedEvent` em Kafka com `orderId` como chave, consome esse mesmo evento e o persiste em PostgreSQL com tratamento de falha por DLT.
+O projeto ja publica `OrderCreatedEvent` em Kafka com `orderId` como chave, consome esse mesmo evento e o persiste em H2 in-memory com tratamento de falha por DLT.
 
 ## Proximo incremento recomendado
 
@@ -18,9 +18,9 @@ Extrair o consumidor Kafka para outro modulo do tutorial, permitindo mostrar int
 
 Adicionar `camel-spring-rabbitmq` ao build e publicar o mesmo evento em exchange dedicada, com roteamento por tipo de evento.
 
-## Caminho 3: PostgreSQL
+## Caminho 3: Persistencia relacional externa
 
-Persistir o pedido recebido antes da publicacao de evento. O projeto hoje persiste o evento consumido; o passo seguinte mais rico eh persistir o comando inicial e evoluir para Outbox Pattern.
+Substituir ou complementar o banco embutido por um banco relacional externo. O projeto hoje persiste o evento consumido em H2; o passo seguinte mais rico eh persistir o comando inicial e evoluir para Outbox Pattern.
 
 ## Caminho 4: Observabilidade
 

@@ -11,8 +11,8 @@ Centraliza defaults locais para:
 - porta HTTP
 - conexao com Kafka
 - endpoint de publicacao `order.created.endpoint`
-- conexao com PostgreSQL
-- politicas de retry da integracao Kafka -> PostgreSQL
+- configuracao do H2 in-memory
+- politicas de retry da integracao Kafka -> persistencia local
 
 ## Liquibase
 
@@ -25,6 +25,19 @@ Os changelogs ficam em `src/main/resources/db/changelog` e hoje cobrem:
 - uma view `order_event_summary` criada a partir de `SELECT`, usada como camada inicial de leitura do fluxo persistido
 
 Essa abordagem elimina a dependencia de criacao manual das tabelas antes de subir a aplicacao.
+
+## H2 in-memory e console web
+
+O `DataSource` padrao agora usa `jdbc:h2:mem:ecommerce;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`, com usuario `sa` e senha vazia.
+
+O console web do H2 pode ser habilitado por propriedade JVM e fica ativo por padrao no ambiente local:
+
+```bash
+-Dh2.console.enabled=true
+-Dh2.console.port=8082
+```
+
+Ao iniciar o app, o banco existe apenas dentro da JVM atual. Isso deixa o tutorial mais pratico para desenvolvimento, mas todo o estado eh perdido ao reiniciar a aplicacao.
 
 ### `src/main/resources/logback.xml`
 
@@ -41,7 +54,7 @@ No ambiente containerizado, o projeto usa `JAVA_OPTS` com propriedades JVM, por 
 ```bash
 -Dhttp.port=8080
 -Dkafka.bootstrap.servers=kafka:9092
--Dpostgres.host=postgres
+-Dh2.console.port=8082
 ```
 
 Essa abordagem permite manter defaults locais simples e ainda adaptar o runtime para Docker sem mudar o codigo.

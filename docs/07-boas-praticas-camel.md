@@ -29,15 +29,15 @@ Rotas `direct:` continuam sendo o ponto mais barato para validar fluxo, transfor
 
 ## 6. Nao prometa infraestrutura sem explicitar estado de uso
 
-Kafka, RabbitMQ e PostgreSQL estao provisionados no projeto, mas nem toda a infraestrutura tem o mesmo nivel de uso. Hoje o fluxo ativo usa Kafka na publicacao e no consumo e PostgreSQL na persistencia; RabbitMQ permanece provisionado como extensao futura e a documentacao precisa deixar isso explicito.
+Kafka e RabbitMQ seguem provisionados no ambiente local, mas nem toda a infraestrutura tem o mesmo nivel de uso. Hoje o fluxo ativo usa Kafka na publicacao e no consumo e H2 in-memory na persistencia; RabbitMQ permanece provisionado como extensao futura e a documentacao precisa deixar isso explicito.
 
 ## 7. Tire DDL do caminho manual da aplicacao
 
-O projeto agora usa Liquibase para controlar o schema do PostgreSQL. Isso reduz drift entre ambientes e evita depender de criacao manual de tabela para que as rotas Camel funcionem.
+O projeto usa Liquibase para controlar o schema do H2 in-memory. Isso reduz drift entre ambientes e evita depender de criacao manual de tabela para que as rotas Camel funcionem.
 
 ## 8. Nao carregue dependencia futura no build atual
 
-Servico opcional em `docker-compose.yml` eh aceitavel para apoiar os proximos capitulos. Dependencia Java e propriedade de runtime sem rota ativa nao sao. A base atual foi ajustada para manter no build apenas Kafka, PostgreSQL e Liquibase, deixando RabbitMQ e metricas como passos explicitos de evolucao.
+Servico opcional em `docker-compose.yml` eh aceitavel para apoiar os proximos capitulos. Dependencia Java e propriedade de runtime sem rota ativa nao sao. A base atual foi ajustada para manter no build apenas Kafka, H2 e Liquibase, deixando RabbitMQ e metricas como passos explicitos de evolucao.
 
 [Anterior: Troubleshooting](06-troubleshooting.md)
 

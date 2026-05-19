@@ -42,6 +42,14 @@ Valida:
 - envio para o endpoint de persistencia
 - envio para DLT quando a persistencia falha
 
+### `InfrastructureConfigurationTest`
+
+Valida:
+
+- bootstrap do `DataSource` H2
+- execucao das migrations Liquibase
+- criacao das estruturas `order_events`, `order_event_dlt` e `order_event_summary`
+
 ## Comando
 
 ```bash
@@ -53,7 +61,7 @@ mvn test
 - teste HTTP real com o app executando em porta local
 - teste de publicacao para RabbitMQ quando a rota AMQP for introduzida
 - teste de integracao com Kafka real via Docker Compose
-- teste de persistencia real em PostgreSQL via Docker Compose
+- teste de execucao do app com H2 Console acessivel
 
 [Anterior: Configuracao e Observabilidade](03-configuracao-observabilidade.md)
 

@@ -16,19 +16,19 @@ import liquibase.resource.ClassLoaderResourceAccessor;
  */
 public final class InfrastructureConfiguration {
 
+    public static final String DEFAULT_H2_JDBC_URL = "jdbc:h2:mem:ecommerce;DB_CLOSE_DELAY=-1;MODE=PostgreSQL";
+    public static final String DEFAULT_H2_USERNAME = "sa";
+    public static final String DEFAULT_H2_PASSWORD = "";
+
     private InfrastructureConfiguration() {
     }
 
     public static DataSource createDataSource() {
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setDriverClassName("org.postgresql.Driver");
-        hikariConfig.setJdbcUrl(String.format(
-                "jdbc:postgresql://%s:%s/%s",
-                property("postgres.host", "localhost"),
-                property("postgres.port", "5432"),
-                property("postgres.database", "ecommerce")));
-        hikariConfig.setUsername(property("postgres.username", "ecommerce"));
-        hikariConfig.setPassword(property("postgres.password", "ecommerce"));
+        hikariConfig.setDriverClassName("org.h2.Driver");
+        hikariConfig.setJdbcUrl(property("h2.datasource.url", DEFAULT_H2_JDBC_URL));
+        hikariConfig.setUsername(property("h2.datasource.username", DEFAULT_H2_USERNAME));
+        hikariConfig.setPassword(property("h2.datasource.password", DEFAULT_H2_PASSWORD));
         hikariConfig.setMaximumPoolSize(5);
         hikariConfig.setMinimumIdle(1);
         hikariConfig.setPoolName("orders-hikari-pool");

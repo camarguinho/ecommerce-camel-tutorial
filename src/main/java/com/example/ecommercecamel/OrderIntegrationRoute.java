@@ -7,7 +7,7 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
 /**
- * Consome o evento publicado em Kafka e o persiste em PostgreSQL.
+ * Consome o evento publicado em Kafka e o persiste em H2.
  */
 public class OrderIntegrationRoute extends RouteBuilder {
 
@@ -37,7 +37,7 @@ public class OrderIntegrationRoute extends RouteBuilder {
                 .process(exchange -> exchange.getMessage().setHeader("receivedAt", Instant.now().toString()))
                 .setHeader("payload", exchangeProperty("orderCreatedRawPayload"))
                 .toD("{{order.created.persistence.endpoint}}")
-                .log("Order ${header.orderId} stored in PostgreSQL after Kafka consumption");
+                .log("Order ${header.orderId} stored in H2 after Kafka consumption");
 
         from("direct:order-created-dlt")
                 .routeId("order-created-dlt-route")

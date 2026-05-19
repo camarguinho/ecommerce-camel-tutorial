@@ -26,9 +26,23 @@ public final class EcommerceCamelApplication {
      */
     public static void main(String[] args) throws Exception {
         Main main = new Main();
+        H2ConsoleSupport h2ConsoleSupport = H2ConsoleSupport.start();
         var ordersDataSource = InfrastructureConfiguration.createDataSource();
         InfrastructureConfiguration.migrate(ordersDataSource);
         main.bind("ordersDataSource", ordersDataSource);
+        main.addMainListener(new MainListenerSupport() {
+            @Override
+            public void afterStart(BaseMainSupport mainSupport) {
+                if (h2ConsoleSupport.getUrl() != null) {
+                    System.out.println("H2 console disponivel em " + h2ConsoleSupport.getUrl());
+                }
+            }
+
+            @Override
+            public void beforeStop(BaseMainSupport mainSupport) {
+                h2ConsoleSupport.close();
+            }
+        });
         main.addMainListener(new MainListenerSupport() {
             @Override
             public void beforeStart(BaseMainSupport mainSupport) {

@@ -1,7 +1,9 @@
 --liquibase formatted sql
 
 --changeset camargo:002-create-order-event-summary-view runOnChange:true
-CREATE OR REPLACE VIEW order_event_summary AS
+DROP VIEW IF EXISTS order_event_summary;
+
+CREATE VIEW order_event_summary AS
 SELECT
     customer_id,
     COUNT(*) AS total_orders,

@@ -4,7 +4,7 @@
 
 ## Objetivo
 
-Este projeto demonstra um fluxo inicial de e-commerce usando Apache Camel 4 em modo standalone com Java 17. O foco atual eh receber um pedido via HTTP, validar a carga, transformar o payload em um evento interno, publicar esse evento em Kafka, consumi-lo de volta, persisti-lo em PostgreSQL e devolver uma resposta de aceite na borda HTTP.
+Este projeto demonstra um fluxo inicial de e-commerce usando Apache Camel 4 em modo standalone com Java 17. O foco atual eh receber um pedido via HTTP, validar a carga, transformar o payload em um evento interno, publicar esse evento em Kafka, consumi-lo de volta, persisti-lo em H2 in-memory e devolver uma resposta de aceite na borda HTTP.
 
 ## Stack principal
 
@@ -14,6 +14,7 @@ Este projeto demonstra um fluxo inicial de e-commerce usando Apache Camel 4 em m
 - Camel Main
 - Camel Platform HTTP Vert.x
 - Camel Jackson
+- H2 Database in-memory
 - Liquibase
 - JUnit 5 e AssertJ
 - Logback
@@ -25,13 +26,14 @@ Este projeto demonstra um fluxo inicial de e-commerce usando Apache Camel 4 em m
 - Rota interna `direct:submit-order`
 - Publicacao do evento `OrderCreatedEvent` em Kafka
 - Consumo do topico `order-created`
-- Persistencia do evento em PostgreSQL
+- Persistencia do evento em H2 in-memory
 - Schema de banco controlado por Liquibase
+- Console web do H2 habilitado para inspecao local
 - Dead-letter route para falhas de persistencia
 - Validacao basica de payload
 - Conversao de erro para respostas JSON coerentes
 - Testes unitarios do fluxo interno, da adaptacao JSON, do health check, da publicacao do evento e do fluxo de consumo/persistencia
-- Infra Docker preparada para PostgreSQL, Kafka e Kafdrop, com RabbitMQ opcional para evolucao futura
+- Infra Docker preparada para Kafka e Kafdrop, com RabbitMQ opcional para evolucao futura e H2 embutido no app
 
 ## O que ainda nao existe
 
@@ -55,7 +57,7 @@ mvn clean package
 
 ### Subir o ambiente com Docker Compose
 
-Se quiser executar o tutorial com Kafka e PostgreSQL locais, suba a stack completa a partir da raiz do modulo:
+Se quiser executar o tutorial com Kafka local e persistencia H2 embutida no app, suba a stack completa a partir da raiz do modulo:
 
 ```bash
 docker compose up --build
@@ -65,10 +67,12 @@ Depois disso, os principais acessos ficam disponiveis em:
 
 - App HTTP raiz: `http://localhost:8080` retorna um JSON simples com os endpoints disponiveis
 - Health: `http://localhost:8080/health`
+- H2 Console: `http://localhost:8082`
 - Kafdrop: `http://localhost:9000`
-- PostgreSQL: `localhost:5432`
 
-Se precisar customizar portas ou credenciais, copie `.env.example` para `.env` antes de subir o compose.
+No H2 Console, use JDBC URL `jdbc:h2:mem:ecommerce;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`, usuario `sa` e senha em branco.
+
+Se precisar customizar portas, copie `.env.example` para `.env` antes de subir o compose.
 
 ### Executar localmente sem Docker
 
@@ -76,11 +80,15 @@ Se precisar customizar portas ou credenciais, copie `.env.example` para `.env` a
 java -jar target/ecommerce-camel-tutorial-1.0.0-SNAPSHOT.jar
 ```
 
+Nesse modo, o banco H2 ja nasce dentro da JVM. Para processar pedidos de ponta a ponta, voce ainda precisa de um Kafka acessivel em `localhost:9092` ou sobrescrever `kafka.bootstrap.servers`.
+
 ## Estrutura minima do codigo
 
 ```text
 src/main/java/com/example/ecommercecamel/
   EcommerceCamelApplication.java
+  H2ConsoleSupport.java
+  InfrastructureConfiguration.java
   OrderHttpRoute.java
   OrderApiRoute.java
   OrderSubmissionRoute.java
