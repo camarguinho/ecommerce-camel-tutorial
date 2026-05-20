@@ -15,8 +15,50 @@ import org.junit.jupiter.api.Test;
 class InfrastructureConfigurationTest {
 
     @Test
+    void shouldReadH2DefaultsFromApplicationProperties() throws Exception {
+        String previousUrl = System.getProperty("h2.datasource.url");
+        String previousUsername = System.getProperty("h2.datasource.username");
+        String previousPassword = System.getProperty("h2.datasource.password");
+
+        System.clearProperty("h2.datasource.url");
+        System.clearProperty("h2.datasource.username");
+        System.clearProperty("h2.datasource.password");
+
+        try (HikariDataSource dataSource = (HikariDataSource) InfrastructureConfiguration.createDataSource()) {
+            assertThat(dataSource.getJdbcUrl()).isEqualTo(InfrastructureConfiguration.DEFAULT_H2_JDBC_URL);
+            assertThat(dataSource.getUsername()).isEqualTo(InfrastructureConfiguration.DEFAULT_H2_USERNAME);
+            assertThat(dataSource.getPassword()).isEqualTo(InfrastructureConfiguration.DEFAULT_H2_PASSWORD);
+        } finally {
+            restoreProperty("h2.datasource.url", previousUrl);
+            restoreProperty("h2.datasource.username", previousUsername);
+            restoreProperty("h2.datasource.password", previousPassword);
+        }
+    }
+
+    @Test
+    void shouldAllowSystemPropertiesToOverrideApplicationProperties() throws Exception {
+        String previousUrl = System.getProperty("h2.datasource.url");
+        String previousUsername = System.getProperty("h2.datasource.username");
+        String previousPassword = System.getProperty("h2.datasource.password");
+
+        System.setProperty("h2.datasource.url", "jdbc:h2:mem:override-webshop;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
+        System.setProperty("h2.datasource.username", "custom-user");
+        System.setProperty("h2.datasource.password", "custom-password");
+
+        try (HikariDataSource dataSource = (HikariDataSource) InfrastructureConfiguration.createDataSource()) {
+            assertThat(dataSource.getJdbcUrl()).isEqualTo("jdbc:h2:mem:override-webshop;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
+            assertThat(dataSource.getUsername()).isEqualTo("custom-user");
+            assertThat(dataSource.getPassword()).isEqualTo("custom-password");
+        } finally {
+            restoreProperty("h2.datasource.url", previousUrl);
+            restoreProperty("h2.datasource.username", previousUsername);
+            restoreProperty("h2.datasource.password", previousPassword);
+        }
+    }
+
+    @Test
     void shouldCreateH2SchemaWithLiquibase() throws Exception {
-        String databaseName = "ecommerce-" + UUID.randomUUID();
+        String databaseName = "webshop-" + UUID.randomUUID();
         String jdbcUrl = "jdbc:h2:mem:" + databaseName + ";DB_CLOSE_DELAY=-1;MODE=PostgreSQL";
         String previousUrl = System.getProperty("h2.datasource.url");
 
@@ -27,11 +69,13 @@ class InfrastructureConfigurationTest {
 
             try (Connection connection = dataSource.getConnection();
                  Statement statement = connection.createStatement()) {
-                assertThat(exists(statement, "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ORDER_EVENTS'"))
+                assertThat(exists(statement, "SELECT 1 FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'ECOMMERCE'"))
+                    .isTrue();
+                assertThat(exists(statement, "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'ECOMMERCE' AND TABLE_NAME = 'ORDER_EVENTS'"))
                         .isTrue();
-                assertThat(exists(statement, "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ORDER_EVENT_DLT'"))
+                assertThat(exists(statement, "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'ECOMMERCE' AND TABLE_NAME = 'ORDER_EVENT_DLT'"))
                         .isTrue();
-                assertThat(exists(statement, "SELECT 1 FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'ORDER_EVENT_SUMMARY'"))
+                assertThat(exists(statement, "SELECT 1 FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_SCHEMA = 'ECOMMERCE' AND TABLE_NAME = 'ORDER_EVENT_SUMMARY'"))
                         .isTrue();
             }
         } finally {
@@ -46,6 +90,14 @@ class InfrastructureConfigurationTest {
     private boolean exists(Statement statement, String sql) throws Exception {
         try (ResultSet resultSet = statement.executeQuery(sql)) {
             return resultSet.next();
+        }
+    }
+
+    private void restoreProperty(String key, String value) {
+        if (value == null) {
+            System.clearProperty(key);
+        } else {
+            System.setProperty(key, value);
         }
     }
 }

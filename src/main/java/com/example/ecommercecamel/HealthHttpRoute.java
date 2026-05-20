@@ -20,6 +20,10 @@ public class HealthHttpRoute extends RouteBuilder {
             .routeId("service-index-http-route")
             .to("direct:service-index");
 
+        from("platform-http:{{h2.console.path:/h2-console}}")
+            .routeId("h2-console-http-route")
+            .to("direct:h2-console-redirect");
+
         rest("/health")
                 .get()
                 .produces("application/json")

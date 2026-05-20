@@ -57,6 +57,7 @@ Executa o fluxo de integracao de consumo:
 Usam a mesma estrategia de separacao:
 
 - `GET /health` -> `direct:health-check`
+- `GET /h2-console` -> redirect para o servidor web do H2
 - a resposta final eh JSON com `status=UP`
 
 ## Fluxo atual do pedido
@@ -90,7 +91,7 @@ Kafka topic order-created
 consume-order-created-route
         |
         v
-H2 order_events
+H2 webshop.ecommerce.order_events
 ```
 
 ## Proximo ponto de extensao natural

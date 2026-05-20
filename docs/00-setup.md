@@ -27,7 +27,7 @@ Este projeto demonstra um fluxo inicial de e-commerce usando Apache Camel 4 em m
 - Publicacao do evento `OrderCreatedEvent` em Kafka
 - Consumo do topico `order-created`
 - Persistencia do evento em H2 in-memory
-- Schema de banco controlado por Liquibase
+- Banco H2 `webshop` com schema `ecommerce` controlado por Liquibase
 - Console web do H2 habilitado para inspecao local
 - Dead-letter route para falhas de persistencia
 - Validacao basica de payload
@@ -67,10 +67,11 @@ Depois disso, os principais acessos ficam disponiveis em:
 
 - App HTTP raiz: `http://localhost:8080` retorna um JSON simples com os endpoints disponiveis
 - Health: `http://localhost:8080/health`
-- H2 Console: `http://localhost:8082`
+- H2 Console via app: `http://localhost:8080/h2-console`
+- H2 Console direto: `http://localhost:8082`
 - Kafdrop: `http://localhost:9000`
 
-No H2 Console, use JDBC URL `jdbc:h2:mem:ecommerce;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`, usuario `sa` e senha em branco.
+No H2 Console, use JDBC URL `jdbc:h2:mem:webshop;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`, usuario `sa` e senha em branco. O schema de trabalho da aplicacao eh `ecommerce`.
 
 Se precisar customizar portas, copie `.env.example` para `.env` antes de subir o compose.
 

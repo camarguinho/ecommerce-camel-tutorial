@@ -47,12 +47,15 @@ docker compose up --build
 
 - App HTTP: `http://localhost:8080`
 - Health: `http://localhost:8080/health`
-- H2 Console: `http://localhost:8082`
+- H2 Console via app: `http://localhost:8080/h2-console`
+- H2 Console direto: `http://localhost:8082`
 - Kafdrop: `http://localhost:9000`
 - RabbitMQ Management: `http://localhost:15672`
 - Kafka broker externo: `localhost:9092`
 
-No H2 Console, conecte usando JDBC `jdbc:h2:mem:ecommerce;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`, usuario `sa` e senha vazia.
+No H2 Console, conecte usando JDBC `jdbc:h2:mem:webshop;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`, usuario `sa` e senha vazia. O schema usado pela aplicacao eh `ecommerce`.
+
+Se o console mostrar o erro sobre `/root/test`, isso significa que a tela foi aberta com a conexao generica padrao do H2. Troque a URL para `jdbc:h2:mem:webshop;DB_CLOSE_DELAY=-1;MODE=PostgreSQL` e mantenha usuario `sa`.
 
 ## Variaveis de ambiente
 

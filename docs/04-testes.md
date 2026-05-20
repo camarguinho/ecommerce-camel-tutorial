@@ -48,7 +48,8 @@ Valida:
 
 - bootstrap do `DataSource` H2
 - execucao das migrations Liquibase
-- criacao das estruturas `order_events`, `order_event_dlt` e `order_event_summary`
+- criacao do schema `ecommerce`
+- criacao das estruturas `ecommerce.order_events`, `ecommerce.order_event_dlt` e `ecommerce.order_event_summary`
 
 ## Comando
 

@@ -20,15 +20,18 @@ O schema do banco nao eh mais pressuposto pelo codigo. Ele eh criado no bootstra
 
 Os changelogs ficam em `src/main/resources/db/changelog` e hoje cobrem:
 
-- DDL para `order_events`
-- DDL para `order_event_dlt`
-- uma view `order_event_summary` criada a partir de `SELECT`, usada como camada inicial de leitura do fluxo persistido
+- criacao do schema `ecommerce`
+- DDL para `ecommerce.order_events`
+- DDL para `ecommerce.order_event_dlt`
+- uma view `ecommerce.order_event_summary` criada a partir de `SELECT`, usada como camada inicial de leitura do fluxo persistido
 
 Essa abordagem elimina a dependencia de criacao manual das tabelas antes de subir a aplicacao.
 
 ## H2 in-memory e console web
 
-O `DataSource` padrao agora usa `jdbc:h2:mem:ecommerce;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`, com usuario `sa` e senha vazia.
+O `DataSource` padrao agora usa `jdbc:h2:mem:webshop;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`, com usuario `sa` e senha vazia. Dentro desse banco, a aplicacao trabalha no schema `ecommerce`.
+
+Esses valores passam a ser lidos de `application.properties` ja no bootstrap da aplicacao. Quando necessario, propriedades JVM como `-Dh2.datasource.url=...` e `-Dh2.console.port=...` sobrescrevem os defaults sem exigir mudanca em codigo.
 
 O console web do H2 pode ser habilitado por propriedade JVM e fica ativo por padrao no ambiente local:
 
@@ -36,6 +39,8 @@ O console web do H2 pode ser habilitado por propriedade JVM e fica ativo por pad
 -Dh2.console.enabled=true
 -Dh2.console.port=8082
 ```
+
+Na borda HTTP da aplicacao, `GET /h2-console` devolve um redirect para esse console standalone, o que deixa a descoberta mais natural em ambiente local.
 
 Ao iniciar o app, o banco existe apenas dentro da JVM atual. Isso deixa o tutorial mais pratico para desenvolvimento, mas todo o estado eh perdido ao reiniciar a aplicacao.
 
