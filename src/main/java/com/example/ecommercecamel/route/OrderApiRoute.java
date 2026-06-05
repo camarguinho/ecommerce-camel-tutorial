@@ -1,4 +1,4 @@
-package com.example.ecommercecamel;
+package com.example.ecommercecamel.route;
 
 import com.example.ecommercecamel.api.ApiErrorResponse;
 import com.example.ecommercecamel.api.CreateOrderRequest;

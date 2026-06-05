@@ -6,7 +6,11 @@
 
 O projeto prioriza testes baratos e focados usando `DefaultCamelContext`, sem subir infraestrutura HTTP real quando isso nao eh necessario.
 
+Os testes acompanham a organizacao do codigo em `route`, `config` e `support`, o que reduz imports artificiais e preserva o encapsulamento quando algum helper usa visibilidade de pacote.
+
 ## Suites atuais
+
+### Pacote `route`
 
 ### `StartupRouteTest`
 
@@ -42,6 +46,8 @@ Valida:
 - envio para o endpoint de persistencia
 - envio para DLT quando a persistencia falha
 
+### Pacote `config`
+
 ### `InfrastructureConfigurationTest`
 
 Valida:
@@ -50,6 +56,15 @@ Valida:
 - execucao das migrations Liquibase
 - criacao do schema `ecommerce`
 - criacao das estruturas `ecommerce.order_events`, `ecommerce.order_event_dlt` e `ecommerce.order_event_summary`
+
+### Pacote `support`
+
+### `H2ConsoleSupportTest`
+
+Valida:
+
+- geracao do arquivo temporario `.h2.server.properties`
+- configuracao do console H2 com a conexao embutida da aplicacao
 
 ## Comando
 

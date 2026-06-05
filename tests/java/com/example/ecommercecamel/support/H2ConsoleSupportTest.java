@@ -1,4 +1,4 @@
-package com.example.ecommercecamel;
+package com.example.ecommercecamel.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

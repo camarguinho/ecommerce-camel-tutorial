@@ -1,4 +1,4 @@
-package com.example.ecommercecamel;
+package com.example.ecommercecamel.route;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

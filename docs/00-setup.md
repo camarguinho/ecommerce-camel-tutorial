@@ -88,15 +88,32 @@ Nesse modo, o banco H2 ja nasce dentro da JVM. Para processar pedidos de ponta a
 ```text
 src/main/java/com/example/ecommercecamel/
   EcommerceCamelApplication.java
-  H2ConsoleSupport.java
-  InfrastructureConfiguration.java
-  OrderHttpRoute.java
-  OrderApiRoute.java
-  OrderSubmissionRoute.java
-  OrderCreatedEventRoute.java
-  OrderIntegrationRoute.java
-  HealthHttpRoute.java
-  HealthRoute.java
+  config/
+    InfrastructureConfiguration.java
+  route/
+    HealthHttpRoute.java
+    HealthRoute.java
+    OrderApiRoute.java
+    OrderCreatedEventRoute.java
+    OrderHttpRoute.java
+    OrderIntegrationRoute.java
+    OrderSubmissionRoute.java
+    StartupRoute.java
+  support/
+    BootstrapProperties.java
+    H2ConsoleSupport.java
+
+tests/java/com/example/ecommercecamel/
+  config/
+    InfrastructureConfigurationTest.java
+  route/
+    HealthRouteTest.java
+    OrderApiRouteTest.java
+    OrderIntegrationRouteTest.java
+    OrderSubmissionRouteTest.java
+    StartupRouteTest.java
+  support/
+    H2ConsoleSupportTest.java
 ```
 
 [Proximo: Arquitetura e Rotas](01-arquitetura.md)

@@ -1,4 +1,4 @@
-package com.example.ecommercecamel;
+package com.example.ecommercecamel.route;
 
 import org.apache.camel.builder.RouteBuilder;
 

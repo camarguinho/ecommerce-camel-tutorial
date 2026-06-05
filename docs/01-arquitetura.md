@@ -6,6 +6,12 @@
 
 O projeto foi estruturado para manter o transporte HTTP separado da logica interna. Essa decisao reduz acoplamento com Vert.x e permite testes unitarios baratos usando apenas `DefaultCamelContext`.
 
+A organizacao atual do codigo acompanha essa separacao em pacotes:
+
+- `com.example.ecommercecamel.route` concentra as `RouteBuilder`
+- `com.example.ecommercecamel.config` concentra a infraestrutura local
+- `com.example.ecommercecamel.support` concentra utilitarios de bootstrap e suporte operacional
+
 ## Rotas atuais
 
 ### `OrderHttpRoute`
@@ -59,6 +65,16 @@ Usam a mesma estrategia de separacao:
 - `GET /health` -> `direct:health-check`
 - `GET /h2-console` -> redirect para o servidor web do H2
 - a resposta final eh JSON com `status=UP`
+
+## Pacotes de suporte
+
+### `InfrastructureConfiguration`
+
+Fica em `config` e centraliza a criacao do `DataSource` H2 e a execucao das migrations Liquibase.
+
+### `BootstrapProperties` e `H2ConsoleSupport`
+
+Ficam em `support` para isolar leitura de propriedades e bootstrap do console H2 do resto das rotas.
 
 ## Fluxo atual do pedido
 

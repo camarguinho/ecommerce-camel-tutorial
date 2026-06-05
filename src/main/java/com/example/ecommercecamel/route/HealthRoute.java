@@ -1,5 +1,6 @@
-package com.example.ecommercecamel;
+package com.example.ecommercecamel.route;
 
+import com.example.ecommercecamel.support.BootstrapProperties;
 import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;

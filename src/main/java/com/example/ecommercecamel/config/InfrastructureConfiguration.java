@@ -1,5 +1,6 @@
-package com.example.ecommercecamel;
+package com.example.ecommercecamel.config;
 
+import com.example.ecommercecamel.support.BootstrapProperties;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;

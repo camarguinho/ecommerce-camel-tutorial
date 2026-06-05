@@ -1,5 +1,6 @@
-package com.example.ecommercecamel;
+package com.example.ecommercecamel.support;
 
+import com.example.ecommercecamel.config.InfrastructureConfiguration;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;

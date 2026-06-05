@@ -1,4 +1,4 @@
-package com.example.ecommercecamel;
+package com.example.ecommercecamel.support;
 
 import java.io.InputStream;
 import java.util.Properties;

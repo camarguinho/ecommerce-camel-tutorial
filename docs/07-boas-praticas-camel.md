@@ -9,6 +9,8 @@ O projeto adota essa pratica ao separar:
 - `OrderHttpRoute` da adaptacao `OrderApiRoute`
 - `HealthHttpRoute` da resposta `HealthRoute`
 
+Essa separacao agora tambem fica explicita na estrutura fisica do projeto, com as rotas concentradas em `com.example.ecommercecamel.route` e os utilitarios de infraestrutura fora do pacote raiz.
+
 Isso melhora testabilidade e reduz dependencia de infraestrutura no teste.
 
 ## 2. Prefira rotas pequenas e nomeadas
