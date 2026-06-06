@@ -11,3 +11,4 @@ Este tutorial foi organizado como trilha progressiva para evoluir um projeto Apa
 7. [Troubleshooting](06-troubleshooting.md)
 8. [Boas Praticas com Camel](07-boas-praticas-camel.md)
 9. [Roadmap de Integracoes](08-roadmap-integracoes.md)
+10. [Tour Navegavel do Projeto](09-tour-navegavel-projeto.md)
